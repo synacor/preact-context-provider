@@ -1,5 +1,7 @@
 # preact-context-provider
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/synacor/preact-context-provider.svg)](https://greenkeeper.io/)
+
 [![npm](https://img.shields.io/npm/v/preact-context-provider.svg)](http://npm.im/preact-context-provider)
 [![Build Status](https://travis-ci.org/synacor/preact-context-provider.svg?branch=master)](https://travis-ci.org/synacor/preact-context-provider)
 
