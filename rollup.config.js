@@ -22,7 +22,9 @@ export default {
 		}),
 		buble({ jsx: 'h' }),
 		format==='umd' && uglify({
-			comments: false,
+			output: {
+				comments: false
+			},
 			mangle: {
 				toplevel: true
 			},
