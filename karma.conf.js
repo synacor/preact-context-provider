@@ -14,11 +14,11 @@ module.exports = function(config) {
 		},
 		webpack: {
 			module: {
-				loaders: [{
+				rules: [{
 					test: /\.jsx?$/,
 					exclude: /node_modules/,
 					loader: 'babel-loader',
-					query: {
+					options: {
 						presets: [
 							['es2015', { loose: true }],
 							'stage-0'
@@ -29,8 +29,7 @@ module.exports = function(config) {
 					}
 				}]
 			},
-			devtool: 'inline-source-map',
-			info: false
+			devtool: 'inline-source-map'
 		},
 		webpackServer: { noInfo: true }
 	});
