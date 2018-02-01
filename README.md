@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/preact-context-provider.svg)](http://npm.im/preact-context-provider)
 [![Build Status](https://travis-ci.org/synacor/preact-context-provider.svg?branch=master)](https://travis-ci.org/synacor/preact-context-provider)
 
-A generic `<Provider />` for preact. It exposes any props you pass it into context.
+A generic `<Provider />` for preact. It exposes any props you pass it into context.  Also provides a merging variant  `<MergingProvider />`, and utility functions `provide` and `mergingProvide`
 
 ## Usage
 
@@ -38,14 +38,13 @@ render(
 
 ### Provider
 
-Adds all passed `props`, with the exception of `mergeEnabled` into `context`, making them available to all descendants.
+Adds all passed `props`, `children` into `context`, making them available to all descendants.
 
 To learn about `context`, see the [React Docs](https://facebook.github.io/react/docs/context.html).
 
 **Parameters**
 
--   `props` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** All props are exposed as properties in `context`, except children and mergeEnabled
-    -   `props.mergeEnabled` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, deep merges any existing keys in `context` with the newly provided keys, giving precedence to parent values (optional, default `false`)
+-   `props` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** All props are exposed as properties in `context`, except children
 
 **Examples**
 
@@ -60,25 +59,67 @@ render(
 );
 //	"{ a: 'b' }"
 
-// without mergeEnabled, top level parent key value overwrites child key
+// lower-level providers override higher providers for any keys that they define
+render(
+  <Provider a={key1: 'foo'} b={key2: 'bar'}>
+    <Provider a={key3: 'buz'} >
+      <Demo />
+    </Provider>
+  </Provider>
+);
+// "{ a: { key3: 'buz' }, b: { key2: 'bar' } }"
+```
+
+### MergingProvider
+
+Similar to [Provider](#provider), but allows a special `mergeWithParent` prop to allow parent context keys with the same name as those
+provided by the current `MerginProvider` to be deep merged, instead of replaced.
+
+To learn about `context`, see the [React Docs](https://facebook.github.io/react/docs/context.html).
+
+**Parameters**
+
+-   `props` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** All props are exposed as properties in `context`, except `children` and `mergeWithParent`
+    -   `props.mergeWithParent` **([Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))** If true, deep merges any existing keys in `context` with the newly provided keys, giving precedence to parent values.
+        If `mergeWithParent` is an array of strings, it will deep merge any keys that are present in the array, and missing keys be overriden by the child like [Provider](#provider). (optional, default `false`)
+
+**Examples**
+
+```javascript
+import Provider, {MergingProvider} from 'preact-context-provider';
+const Demo = (props, context) => {
+  console.log(context);  // "{ a: 'b' }"
+};
+
+// without mergeWithParent prop, child keys overwrite parent key values
 render(
   <Provider a={key1: 'foo'}>
-    <Provider a={key1: 'bar', key2: 'baz'}>
+    <MergingProvider a={key2: 'bar'}>
       <Demo />
-    </Provider>
+    </MergingProvider>
   </Provider>
 );
-// "{ a: { key1: 'foo' } }"
+// "{ a: { key2: 'bar' } }"
 
-// with mergeEnabled, parent key is merged with children, parent values taking precedence
+// with mergeWithParent is true, parent key is merged with children, parent values taking precedence
 render(
-  <Provider a={name: 'foo'}>
-    <Provider mergeEnabled a={name: 'bar'}>
+  <Provider a={key1: 'foo'}>
+    <MergingProvider mergeWithParent a={key2: 'bar'}>
       <Demo />
-    </Provider>
+    </MergingProvider>
   </Provider>
 );
-// "{ a: { key1: 'foo', key2: 'baz' } }"
+// "{ a: { key1: 'foo', key2: 'bar' } }"
+
+ // with mergeWithParent is an array, only specified keys are, non-specified keys get their value from current node
+render(
+  <Provider a={key1: 'foo'} b={key2: 'bar'}>
+    <MergingProvider mergeWithParent=['a'] a={key3: 'baz} b={key4: 'buz'}>
+      <Demo />
+    </MergingProvider>
+  </Provider>
+);
+// "{ a: { key1: 'foo', key3: 'baz' }, b: {key4: 'buz'} }"
 ```
 
 ### provide
@@ -92,6 +133,7 @@ Higher Order Component that wraps components in a [Provider](#provider) for the 
 **Examples**
 
 ```javascript
+import {provide} from 'preact-context-provider';
 const Demo = (props, context) => {
   console.log(context.a);  // "b"
 };
@@ -101,3 +143,25 @@ render( <ProvidedDemo /> );
 ```
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function that, given a Child component, wraps it in a Provider component for the given context.
+
+### mergingProvide
+
+Higher Order Component that wraps components in a [MergingProvider](#mergingprovider) for the given context.
+
+**Parameters**
+
+-   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Properties to pass into context (passed to [MergingProvider](#mergingprovider))
+
+**Examples**
+
+```javascript
+import {mergingProvide} from 'preact-context-provider';
+const Demo = (props, context) => {
+  console.log(context.a);
+};
+const ProvidedDemo = mergingProvide({a: "b"})(Demo);
+
+render( <ProvidedDemo /> ); // "b"
+```
+
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function that, given a Child component, wraps it in a [MergingProvider](#mergingprovider) component for the given context.
