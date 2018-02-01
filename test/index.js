@@ -24,6 +24,29 @@ describe('preact-context-provider', () => {
 			mount(<Provider {...context}><Spy /></Provider>);
 			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] }, context);
 		});
+
+		it('should overwrite higher context keys by default if mergeEnabled is not true', () => {
+			mount(
+			<Provider {...context}>
+				<Provider a="overwrittenA" >
+					<Spy />
+				</Provider>
+			</Provider>);
+			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] }, { a: 'overwrittenA', b: 'b' });
+
+		});
+
+		it('should deep merge with higher context keys, giving them precendence, when mergeEnabled is true', () => {
+			mount(
+			<Provider {...context}>
+				<Provider mergeEnabled a={{ name: 'notOverwrittenNameA', newProp: 'c' }} >
+					<Spy />
+				</Provider>
+			</Provider>);
+			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] },
+				{ a: { name: 'a', newProp: 'c' }, b: 'b' });
+		});
+
 	});
 
 	describe('provide()', () => {
