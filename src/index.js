@@ -116,7 +116,7 @@ function deepAssign(target, source) {
  *  // with mergeWithParent is an array, only specified keys are, non-specified keys get their value from current node
  * render(
  *   <Provider a={key1: 'foo'} b={key2: 'bar'}>
- *     <MergingProvider mergeWithParent=['a'] a={key3: 'baz} b={key4: 'buz'}>
+ *     <MergingProvider mergeWithParent={['a']} a={key3: 'baz} b={key4: 'buz'}>
  *       <Demo />
  *     </MergingProvider>
  *   </Provider>
