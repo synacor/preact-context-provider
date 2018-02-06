@@ -18,7 +18,7 @@
     "transpile:es": "rollup -c --environment FORMAT:es",
     "docs": "documentation readme src/index.js --section API -q",
     "size": "echo \"Gzipped Size: $(strip-json-comments --no-whitespace dist/preact-context-provider.js | gzip-size --raw)b\"",
-    "release": "npm run build -s && git commit -am $npm_package_version && git tag $npm_package_version && git push --follow-tags && npm publish"
+    "release": "npm run build -s && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "repository": {
     "type": "git",
