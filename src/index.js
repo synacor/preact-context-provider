@@ -77,23 +77,23 @@ function deepAssign(target, source) {
 
 
 /**
- * Similar to {@link Provider}, but allows a special `mergeWithParent` prop to allow parent context keys with the same name as those
+ * Similar to {@link Provider}, but allows a special `mergeProps` prop to allow parent supplied context keys with the same name as those
  * provided by the current `MergingProvider` to be deep merged, instead of replaced.
  *
  * To learn about `context`, see the [React Docs](https://facebook.github.io/react/docs/context.html).
  *
  * @name MergingProvider
- * @param {Object} props All props are exposed as properties in `context`, except `children` and `mergeWithParent`
- * @param {Boolean|Array} [props.mergeWithParent=false] If true, deep merges any existing keys in `context` with the newly provided keys, giving precedence to parent values.
- * If `mergeWithParent` is an array of strings, it will deep merge any keys that are present in the array, and missing keys be overriden by the child like {@link Provider}.
+ * @param {Object} props All props are exposed as properties in `context`, except `children` and `mergeProps`
+ * @param {Array} [props.mergeProps] If not supplied, all supplied props will be merged with keys already in context.  If supplied as an array of strings,
+ * it will deep merge any prop names that are present in the array, and missing prop names be overriden by the child like {@link Provider}.
  *
  * @example
- * import Provider, {MergingProvider} from 'preact-context-provider';
+ * import Provider, { MergingProvider } from 'preact-context-provider';
  * const Demo = (props, context) => {
  *   console.log(context);  // "{ a: 'b' }"
  * };
  *
- * // without mergeWithParent prop, child keys overwrite parent key values
+ * // with mergeProps unspecified, all parent context keys are merged with the ones presently supplied, parent values taking precedence
  * render(
  *   <Provider a={key1: 'foo'}>
  *     <MergingProvider a={key2: 'bar'}>
@@ -101,22 +101,13 @@ function deepAssign(target, source) {
  *     </MergingProvider>
  *   </Provider>
  * );
- * // "{ a: { key2: 'bar' } }"
- *
- * // with mergeWithParent is true, parent key is merged with children, parent values taking precedence
- * render(
- *   <Provider a={key1: 'foo'}>
- *     <MergingProvider mergeWithParent a={key2: 'bar'}>
- *       <Demo />
- *     </MergingProvider>
- *   </Provider>
- * );
  * // "{ a: { key1: 'foo', key2: 'bar' } }"
  *
- *  // with mergeWithParent is an array, only specified keys are, non-specified keys get their value from current node
+ *  // when mergeProps is an array, only specified keys are merged, non-specified keys get their value from current node
+ * // in this example, only the 'a' context key is merged.  'b' is overwritten by the lower node
  * render(
  *   <Provider a={key1: 'foo'} b={key2: 'bar'}>
- *     <MergingProvider mergeWithParent={['a']} a={key3: 'baz'} b={key4: 'buz'}>
+ *     <MergingProvider mergeProps={['a']} a={key3: 'baz'} b={key4: 'buz'}>
  *       <Demo />
  *     </MergingProvider>
  *   </Provider>
@@ -127,11 +118,11 @@ export class MergingProvider {
 	getChildContext() {
 		let context = {},
 			props=this.props,
-			mergeWithParent=props.mergeWithParent,
-			mergeIsArray=Array.isArray(mergeWithParent);
+			mergeProps = props.mergeProps,
+			mergeIsArray=Array.isArray(mergeProps);
 
-		for (let i in props) if (i !== 'children' && i !== 'mergeWithParent') {
-			context[i] = mergeWithParent && (!mergeIsArray || ~mergeWithParent.indexOf(i)) ? deepAssign(this.context[i], props[i]) : props[i];
+		for (let i in props) if (i !== 'children' && i !== 'mergeProps') {
+			context[i] = (!mergeIsArray || ~mergeProps.indexOf(i)) ? deepAssign(this.context[i], props[i]) : props[i];
 		}
 		return context;
 	}
