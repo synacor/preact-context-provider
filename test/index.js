@@ -39,21 +39,10 @@ describe('preact-context-provider', () => {
 	});
 
 	describe('<MergingProvider />', () => {
-		it('should overwrite higher context keys by default if mergeWithParent is not true', () => {
+		it('should deep merge with higher context keys, giving them precendence, when mergeProps is unset', () => {
 			mount(
 			<MergingProvider {...context}>
-				<MergingProvider a="overwrittenA" >
-					<Spy />
-				</MergingProvider>
-			</MergingProvider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] }, { a: 'overwrittenA', b: 'b' });
-
-		});
-
-		it('should deep merge with higher context keys, giving them precendence, when mergeWithParent is true', () => {
-			mount(
-			<MergingProvider {...context}>
-				<MergingProvider mergeWithParent a={{ name: 'notOverwrittenNameA', newProp: 'c' }} b="newB">
+				<MergingProvider a={{ name: 'notOverwrittenNameA', newProp: 'c' }} b="newB">
 					<Spy />
 				</MergingProvider>
 			</MergingProvider>);
@@ -61,10 +50,21 @@ describe('preact-context-provider', () => {
 				{ a: { name: 'a', newProp: 'c' }, b: 'b' });
 		});
 
-		it('should deep merge with selected higher context keys, giving them precendence, when mergeWithParent is an array', () => {
+		it('should deep merge with higher context keys, giving them precendence, when mergeProps is true', () => {
+			mount(
+			<MergingProvider {...context}>
+				<MergingProvider mergeProps a={{ name: 'notOverwrittenNameA', newProp: 'c' }} b="newB">
+					<Spy />
+				</MergingProvider>
+			</MergingProvider>);
+			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] },
+				{ a: { name: 'a', newProp: 'c' }, b: 'b' });
+		});
+
+		it('should deep merge with selected higher context keys, giving them precendence, when mergeProps is an array', () => {
 			mount(
 			<MergingProvider a={{ name: 'a' }} b={{ name: 'b' }} >
-				<MergingProvider mergeWithParent={['a']} a={{ name: 'notOverwrittenNameA', newProp: 'c' }} b={{ newProp: 'd' }} >
+				<MergingProvider mergeProps={['a']} a={{ name: 'notOverwrittenNameA', newProp: 'c' }} b={{ newProp: 'd' }} >
 					<Spy />
 				</MergingProvider>
 			</MergingProvider>);
@@ -75,7 +75,7 @@ describe('preact-context-provider', () => {
 		it('should allow parent to prevent child value from merging by using null value for a key', () => {
 			mount(
 			<MergingProvider a={null} b={{ name: 'b' }} >
-				<MergingProvider mergeWithParent a={{ name: 'a', newProp: 'c' }} b={{ newProp: 'd' }} >
+				<MergingProvider mergeProps a={{ name: 'a', newProp: 'c' }} b={{ newProp: 'd' }} >
 					<Spy />
 				</MergingProvider>
 			</MergingProvider>);
@@ -101,8 +101,8 @@ describe('preact-context-provider', () => {
 		});
 
 		it('should wrap a child with a <MergingProvider> tag with the supplied context, and pass through any props to the child after wrapped', () => {
-			let MergingProvidedSpy = mergingProvide({ ...context, mergeWithParent: true })(Spy);
-			expect(<MergingProvidedSpy foo="bar" />).to.equal(<MergingProvider a={{ name: 'a' }} b="b" mergeWithParent><Spy foo="bar" /></MergingProvider>);
+			let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(Spy);
+			expect(<MergingProvidedSpy foo="bar" />).to.equal(<MergingProvider a={{ name: 'a' }} b="b" mergeProps><Spy foo="bar" /></MergingProvider>);
 		});
 	});
 });
