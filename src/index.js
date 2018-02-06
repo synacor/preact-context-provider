@@ -78,7 +78,7 @@ function deepAssign(target, source) {
 
 /**
  * Similar to {@link Provider}, but allows a special `mergeWithParent` prop to allow parent context keys with the same name as those
- * provided by the current `MerginProvider` to be deep merged, instead of replaced.
+ * provided by the current `MergingProvider` to be deep merged, instead of replaced.
  *
  * To learn about `context`, see the [React Docs](https://facebook.github.io/react/docs/context.html).
  *
