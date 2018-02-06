@@ -1,7 +1,7 @@
 {
   "name": "preact-context-provider",
   "amdName": "Provider",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A generic <Provider /> for preact to put props into context",
   "jsnext:main": "dist/preact-context-provider.es.js",
   "module": "dist/preact-context-provider.es.js",
@@ -35,7 +35,8 @@
   ],
   "homepage": "https://github.com/synacor/preact-context-provider",
   "authors": [
-    "Jason Miller <jasonmiller@synacor.com>"
+    "Jason Miller <jasonmiller@synacor.com>",
+    "Bill Neff <billneff79@gmail.com>"
   ],
   "license": "BSD 3-Clause",
   "eslintConfig": {
