@@ -72,26 +72,26 @@ render(
 
 ### MergingProvider
 
-Similar to [Provider](#provider), but allows a special `mergeWithParent` prop to allow parent context keys with the same name as those
+Similar to [Provider](#provider), but allows a special `mergeProps` prop to allow parent supplied context keys with the same name as those
 provided by the current `MergingProvider` to be deep merged, instead of replaced.
 
 To learn about `context`, see the [React Docs](https://facebook.github.io/react/docs/context.html).
 
 **Parameters**
 
--   `props` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** All props are exposed as properties in `context`, except `children` and `mergeWithParent`
-    -   `props.mergeWithParent` **([Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))** If true, deep merges any existing keys in `context` with the newly provided keys, giving precedence to parent values.
-        If `mergeWithParent` is an array of strings, it will deep merge any keys that are present in the array, and missing keys be overriden by the child like [Provider](#provider). (optional, default `false`)
+-   `props` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** All props are exposed as properties in `context`, except `children` and `mergeProps`
+    -   `props.mergeProps` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)?** If not supplied, all supplied props will be merged with keys already in context.  If supplied as an array of strings,
+        it will deep merge any prop names that are present in the array, and missing prop names be overriden by the child like [Provider](#provider).
 
 **Examples**
 
 ```javascript
-import Provider, {MergingProvider} from 'preact-context-provider';
+import Provider, { MergingProvider } from 'preact-context-provider';
 const Demo = (props, context) => {
   console.log(context);  // "{ a: 'b' }"
 };
 
-// without mergeWithParent prop, child keys overwrite parent key values
+// with mergeProps unspecified, all parent context keys are merged with the ones presently supplied, parent values taking precedence
 render(
   <Provider a={key1: 'foo'}>
     <MergingProvider a={key2: 'bar'}>
@@ -99,22 +99,13 @@ render(
     </MergingProvider>
   </Provider>
 );
-// "{ a: { key2: 'bar' } }"
-
-// with mergeWithParent is true, parent key is merged with children, parent values taking precedence
-render(
-  <Provider a={key1: 'foo'}>
-    <MergingProvider mergeWithParent a={key2: 'bar'}>
-      <Demo />
-    </MergingProvider>
-  </Provider>
-);
 // "{ a: { key1: 'foo', key2: 'bar' } }"
 
- // with mergeWithParent is an array, only specified keys are, non-specified keys get their value from current node
+ // when mergeProps is an array, only specified keys are merged, non-specified keys get their value from current node
+// in this example, only the 'a' context key is merged.  'b' is overwritten by the lower node
 render(
   <Provider a={key1: 'foo'} b={key2: 'bar'}>
-    <MergingProvider mergeWithParent={['a']} a={key3: 'baz'} b={key4: 'buz'}>
+    <MergingProvider mergeProps={['a']} a={key3: 'baz'} b={key4: 'buz'}>
       <Demo />
     </MergingProvider>
   </Provider>
