@@ -1,36 +1,52 @@
-/* eslint-env node */
+/* eslint-disable */
+
+var path = require('path');
+
+var pkg = require('./package.json');
+
+var REPORTER = process.env.REPORTER || (process.env.ENVIRONMENT==='ci' && 'junit') || '';
 
 module.exports = function(config) {
 	config.set({
-		browsers: ['jsdom'],
+		browsers: ['ChromeHeadless'],
 		frameworks: ['mocha', 'chai-sinon'],
-		reporters: ['mocha'],
+		reporters: ['mocha'].concat(REPORTER.split(/[, ]/)).filter(dedupe),
+		junitReporter: {
+			outputDir: 'test-reports', // results will be saved as $outputDir/$browserName.xml
+			suite: require('./package.json').name
+		},
 		mochaReporter: { showDiff: true },
 		files: [
-			{ pattern: 'test/**/*.js', watched: false }
+			'test/**/*.js'
 		],
 		preprocessors: {
 			'{src,test}/**/*': ['webpack', 'sourcemap']
 		},
 		webpack: {
+			mode: 'development',
+			devtool: 'inline-source-map',
+			resolve: {
+				alias: {
+					'preact-context-provider': path.resolve(__dirname, process.env.TEST_PRODUCTION ? pkg.main : 'src')
+				}
+			},
 			module: {
 				rules: [{
 					test: /\.jsx?$/,
 					exclude: /node_modules/,
 					loader: 'babel-loader',
 					options: {
-						presets: [
-							['es2015', { loose: true }],
-							'stage-0'
-						],
+						presets: [ '@babel/env' ],
 						plugins: [
-							['transform-react-jsx', { pragma: 'h' }]
+							['@babel/plugin-transform-react-jsx', { pragma: 'h' }]
 						]
 					}
 				}]
 			},
-			devtool: 'inline-source-map'
 		},
-		webpackServer: { noInfo: true }
+		webpackServer: { stats: 'errors-only' }
 	});
 };
+
+// filters out empties && dupes
+function dedupe(v, i, arr) { return v && arr.indexOf(v)===i; }
