@@ -145,6 +145,8 @@ const Demo = (props, context) => {
 };
 const ProvidedDemo = provide({a: "b"})(Demo);
 
+ProvidedDemo.getWrappedComponent() === Demo; // true
+
 render( <ProvidedDemo /> );
 ```
 
@@ -166,6 +168,8 @@ const Demo = (props, context) => {
   console.log(context.a);
 };
 const ProvidedDemo = mergingProvide({a: "b"})(Demo);
+
+ProvidedDemo.getWrappedComponent() === Demo; // true
 
 render( <ProvidedDemo /> ); // "b"
 ```

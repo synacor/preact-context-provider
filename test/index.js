@@ -93,6 +93,26 @@ describe('preact-context-provider', () => {
 			let ProvidedSpy = provide(context)(Spy);
 			expect(<ProvidedSpy foo="bar" />).to.equal(<Provider a={{ name: 'a' }} b="b"><Spy foo="bar" /></Provider>);
 		});
+
+		describe('getWrappedComponent()', () => {
+
+			it('should be a function', () => {
+				let Wrapped = provide(context)(Spy);
+				expect(Wrapped.getWrappedComponent).to.be.a('function');
+			});
+
+			it('should return the Child component that it is wrapping', () => {
+				let Wrapped = provide(context)(Spy);
+				expect(Wrapped.getWrappedComponent()).to.equal(Spy);
+			});
+
+			it('should recursively call getWrappedComponent() on Child components to return the first non-decorator Child', () => {
+				let Wrapped = provide(context)(provide(context)(Spy));
+				expect(Wrapped.getWrappedComponent()).to.equal(Spy);
+			});
+
+		});
+
 	});
 
 	describe('mergingProvide()', () => {
@@ -104,5 +124,25 @@ describe('preact-context-provider', () => {
 			let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(Spy);
 			expect(<MergingProvidedSpy foo="bar" />).to.equal(<MergingProvider a={{ name: 'a' }} b="b" mergeProps><Spy foo="bar" /></MergingProvider>);
 		});
+
+		describe('getWrappedComponent()', () => {
+
+			it('should be a function', () => {
+				let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(Spy);
+				expect(MergingProvidedSpy.getWrappedComponent).to.be.a('function');
+			});
+
+			it('should return the Child component that it is wrapping', () => {
+				let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(Spy);
+				expect(MergingProvidedSpy.getWrappedComponent()).to.equal(Spy);
+			});
+
+			it('should recursively call getWrappedComponent() on Child components to return the first non-decorator Child', () => {
+				let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(mergingProvide({ ...context, mergeProps: true })(Spy));
+				expect(MergingProvidedSpy.getWrappedComponent()).to.equal(Spy);
+			});
+
+		});
+
 	});
 });

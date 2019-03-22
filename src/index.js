@@ -146,9 +146,15 @@ export class MergingProvider {
  * };
  * const ProvidedDemo = provide({a: "b"})(Demo);
  *
+ * ProvidedDemo.getWrappedComponent() === Demo; // true
+ *
  * render( <ProvidedDemo /> );
  */
-export const provide = ctx => Child => props => h(Provider, ctx, h(Child, props));
+export const provide = ctx => Child => {
+	const ProviderWrapper = props => h(Provider, ctx, h(Child, props));
+	ProviderWrapper.getWrappedComponent = Child && Child.getWrappedComponent || (() => Child);
+	return ProviderWrapper;
+};
 
 Provider.provide = provide;
 
@@ -166,6 +172,12 @@ Provider.provide = provide;
  * };
  * const ProvidedDemo = mergingProvide({a: "b"})(Demo);
  *
+ * ProvidedDemo.getWrappedComponent() === Demo; // true
+ *
  * render( <ProvidedDemo /> ); // "b"
  */
-export const mergingProvide = ctx => Child => props => h(MergingProvider, ctx, h(Child, props));
+export const mergingProvide = ctx => Child => {
+	const MergingProviderWrapper = props => h(MergingProvider, ctx, h(Child, props));
+	MergingProviderWrapper.getWrappedComponent = Child && Child.getWrappedComponent || (() => Child);
+	return MergingProviderWrapper;
+};
