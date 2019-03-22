@@ -10,7 +10,7 @@
   "source": "src/index.js",
   "scripts": {
     "lint": "eslint src test",
-    "test": "npm-run-all -p lint test:unit test:prod",
+    "test": "npm-run-all -p lint test:unit build -s test:prod",
     "test:unit": "karma start karma.conf.js --single-run",
     "test:prod": "TEST_PRODUCTION=true npm run test:unit",
     "test:watch": "npm run test:unit -- --no-single-run",
