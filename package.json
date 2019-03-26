@@ -1,7 +1,7 @@
 {
   "name": "preact-context-provider",
   "amdName": "Provider",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A generic <Provider /> for preact to put props into context",
   "jsnext:main": "dist/preact-context-provider.es.js",
   "module": "dist/preact-context-provider.es.js",
@@ -21,7 +21,7 @@
     "transpile:esm": "rollup -c -m -f es  -n $npm_package_amdName -i $npm_package_source -o $npm_package_module",
     "docs": "documentation readme src/index.js --section API -q",
     "size": "echo \"Gzipped Size: $(strip-json-comments --no-whitespace dist/preact-context-provider.js | gzip-size --raw)b\"",
-    "release": "npm run build -s && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "prepublishOnly:": "npm run build -s && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags"
   },
   "repository": {
     "type": "git",
