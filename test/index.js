@@ -22,7 +22,7 @@ describe('preact-context-provider', () => {
 
 		it('should expose props into context', () => {
 			mount(<Provider {...context}><Spy /></Provider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] }, context);
+			expect(Spy).to.have.been.calledOnce.and.calledWith({}, context);
 		});
 
 		it('should overwrite higher context keys', () => {
@@ -32,7 +32,7 @@ describe('preact-context-provider', () => {
 						<Spy />
 					</Provider>
 				</Provider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] }, { a: 'overwrittenA', b: 'b' });
+			expect(Spy).to.have.been.calledOnce.and.calledWith({}, { a: 'overwrittenA', b: 'b' });
 
 		});
 
@@ -46,7 +46,7 @@ describe('preact-context-provider', () => {
 						<Spy />
 					</MergingProvider>
 				</MergingProvider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] },
+			expect(Spy).to.have.been.calledOnce.and.calledWith({},
 				{ a: { name: 'a', newProp: 'c' }, b: 'b' });
 		});
 
@@ -57,7 +57,7 @@ describe('preact-context-provider', () => {
 						<Spy />
 					</MergingProvider>
 				</MergingProvider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] },
+			expect(Spy).to.have.been.calledOnce.and.calledWith({},
 				{ a: { name: 'a', newProp: 'c' }, b: 'b' });
 		});
 
@@ -68,7 +68,7 @@ describe('preact-context-provider', () => {
 						<Spy />
 					</MergingProvider>
 				</MergingProvider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] },
+			expect(Spy).to.have.been.calledOnce.and.calledWith({},
 				{ a: { name: 'a', newProp: 'c' }, b: { newProp: 'd' } });
 		});
 
@@ -79,7 +79,7 @@ describe('preact-context-provider', () => {
 						<Spy />
 					</MergingProvider>
 				</MergingProvider>);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({ children: [] },
+			expect(Spy).to.have.been.calledOnce.and.calledWith({},
 				{ a: null, b: { name: 'b', newProp: 'd' } });
 		});
 	});

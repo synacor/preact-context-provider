@@ -39,7 +39,7 @@ export default class Provider {
 	}
 
 	render(props) {
-		return props.children[0];
+		return props.children;
 	}
 }
 
@@ -128,7 +128,7 @@ export class MergingProvider {
 	}
 
 	render(props) {
-		return props.children[0];
+		return props.children;
 	}
 }
 
