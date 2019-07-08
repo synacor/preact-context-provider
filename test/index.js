@@ -1,5 +1,4 @@
 import { h, render } from 'preact';
-import 'preact-jsx-chai';
 import Provider, { MergingProvider, provide, mergingProvide } from 'preact-context-provider';
 
 describe('preact-context-provider', () => {
@@ -91,7 +90,10 @@ describe('preact-context-provider', () => {
 
 		it('should wrap a child with a <Provider> tag with the supplied context, and pass through any props to the child after wrapped', () => {
 			let ProvidedSpy = provide(context)(Spy);
-			expect(<ProvidedSpy foo="bar" />).to.equal(<Provider a={{ name: 'a' }} b="b"><Spy foo="bar" /></Provider>);
+			mount(<ProvidedSpy foo="bar" />);
+			expect(Spy).to.have.been.calledOnce.and.calledWith({foo:'bar'}, {
+				a: { name: 'a' }, b:"b"
+			});
 		});
 
 		describe('getWrappedComponent()', () => {
@@ -122,7 +124,10 @@ describe('preact-context-provider', () => {
 
 		it('should wrap a child with a <MergingProvider> tag with the supplied context, and pass through any props to the child after wrapped', () => {
 			let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(Spy);
-			expect(<MergingProvidedSpy foo="bar" />).to.equal(<MergingProvider a={{ name: 'a' }} b="b" mergeProps><Spy foo="bar" /></MergingProvider>);
+			mount(<MergingProvidedSpy foo="bar" />);
+			expect(Spy).to.have.been.calledOnce.and.calledWith({foo:'bar'}, {
+				a: { name: 'a' }, b:"b"
+			});
 		});
 
 		describe('getWrappedComponent()', () => {
