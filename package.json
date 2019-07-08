@@ -1,7 +1,7 @@
 {
   "name": "preact-context-provider",
   "amdName": "Provider",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A generic <Provider /> for preact to put props into context",
   "jsnext:main": "dist/preact-context-provider.es.js",
   "module": "dist/preact-context-provider.es.js",
