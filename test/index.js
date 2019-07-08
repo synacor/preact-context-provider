@@ -91,8 +91,8 @@ describe('preact-context-provider', () => {
 		it('should wrap a child with a <Provider> tag with the supplied context, and pass through any props to the child after wrapped', () => {
 			let ProvidedSpy = provide(context)(Spy);
 			mount(<ProvidedSpy foo="bar" />);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({foo:'bar'}, {
-				a: { name: 'a' }, b:"b"
+			expect(Spy).to.have.been.calledOnce.and.calledWith({ foo: 'bar' }, {
+				a: { name: 'a' }, b: 'b'
 			});
 		});
 
@@ -125,8 +125,8 @@ describe('preact-context-provider', () => {
 		it('should wrap a child with a <MergingProvider> tag with the supplied context, and pass through any props to the child after wrapped', () => {
 			let MergingProvidedSpy = mergingProvide({ ...context, mergeProps: true })(Spy);
 			mount(<MergingProvidedSpy foo="bar" />);
-			expect(Spy).to.have.been.calledOnce.and.calledWith({foo:'bar'}, {
-				a: { name: 'a' }, b:"b"
+			expect(Spy).to.have.been.calledOnce.and.calledWith({ foo: 'bar' }, {
+				a: { name: 'a' }, b: 'b'
 			});
 		});
 
