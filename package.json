@@ -41,7 +41,7 @@
     "Jason Miller <jasonmiller@synacor.com>",
     "Bill Neff <billneff79@gmail.com>"
   ],
-  "license": "BSD 3-Clause",
+  "license": "BSD-3-Clause",
   "eslintConfig": {
     "extends": "eslint-config-synacor"
   },
@@ -83,6 +83,6 @@
     "webpack": "^4.35.3"
   },
   "peerDependencies": {
-    "preact": "*"
+    "preact": "< 10"
   }
 }

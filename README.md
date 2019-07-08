@@ -11,6 +11,9 @@ Install it via npm:
 
 ```sh
 npm install --save preact-context-provider
+
+# or, for Preact X support
+npm install --save preact-context-provider@preactx
 ```
 
 Then import it and use:
@@ -31,6 +34,10 @@ render(
 	</Provider>
 );
 ```
+
+## Preact Version Support
+
+By default, the `master` branch of this repo supports preact 9 and below, and is published in normal patch/minor/major releases to the `latest` tag in npm.  Support for preact X (versions 10+ of preact) is handled in the `preactX` branch and are always published to the `preactx` tag in npm.  When preact X obtains widespread adoption, the `master` branch of this project will support preact X and a new major version under `latest` tag will be published to in npm.
 
 ## API
 
