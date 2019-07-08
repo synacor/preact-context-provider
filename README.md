@@ -1,7 +1,7 @@
 # preact-context-provider
 
 [![npm](https://img.shields.io/npm/v/preact-context-provider.svg)](http://npm.im/preact-context-provider)
-[![Build Status](https://travis-ci.org/synacor/preact-context-provider.svg?branch=master)](https://travis-ci.org/synacor/preact-context-provider)
+[![Build Status](https://travis-ci.org/synacor/preact-context-provider.svg?branch=preactX)](https://travis-ci.org/synacor/preact-context-provider)
 
 A generic `<Provider />` for preact. It exposes any props you pass it into context.  Also provides a merging variant  `<MergingProvider />`, and utility functions `provide` and `mergingProvide`
 
